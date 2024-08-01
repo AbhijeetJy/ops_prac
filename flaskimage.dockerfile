@@ -1,7 +1,7 @@
 FROM python:3.8-slim-buster
 WORKDIR /app
-COPY ./webapp .
-RUN pip install -r ./webapp/require.txt
+COPY ./webapp /app
+RUN pip install -r /app/webapp/require.txt
 EXPOSE 5000
-CMD['python', 'flask-app.py']
+CMD ["python", "/app/webapp/flask-app.py"]
 
