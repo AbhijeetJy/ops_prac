@@ -1,4 +1,4 @@
-name: ec2 Workflow
+name: EC2 Workflow
 
 on:
   push:
@@ -6,27 +6,33 @@ on:
 jobs:
   stage_build:
     runs-on: ubuntu-latest
-    container:
-      image: centos:7
     env:
-      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     steps:
-      - name: Lauching the production ec2
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
         run: |
-          yes | yum install git
-          pip install -r requirements.txt
-          yum install docker -y
-          systemctl start docker
-          chmod 777 /var/run/docker.sock
+          sudo apt-get update
+          sudo apt-get install -y git
+          sudo apt-get install -y python3-pip
+          sudo apt-get install -y docker.io
+          sudo systemctl start docker
+          sudo chmod 777 /var/run/docker.sock
+
+      - name: Build and Push Docker Image
+        run: |
           cd ops_prac
-          export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION=ap-south-1
+          export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          export AWS_DEFAULT_REGION=ap-south-1
           docker build -f flaskimage.dockerfile -t tryimage .
           mkdir ./key
           aws s3 cp s3://adminbucket-nj-abhi-123/keys/TEC2.pem ./key/
-          chmod 400 ./key/TEC2.pem
+          sudo chmod 400 ./key/TEC2.pem
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/r3o8w1g0
           docker tag tryimage:latest public.ecr.aws/r3o8w1g0/test-flask:latest
           docker push public.ecr.aws/r3o8w1g0/test-flask:latest
-  
