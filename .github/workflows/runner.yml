@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Lauching the production ec2
         run: |
-          yes | sudo yum install git
+          yes | yum install git
           pip install -r requirements.txt
           yum install docker -y
           systemctl start docker
