@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Lauching the production ec2
-      - run: |
+        run: |
           yes | sudo yum install git
           pip install -r requirements.txt
           sudo yum install docker -y
