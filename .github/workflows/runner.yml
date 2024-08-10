@@ -14,6 +14,7 @@ jobs:
       - name: Lauching the production ec2
         run: |
           sudo apt-get install git -y
+          git clone https://github.com/AbhijeetJy/ops_prac.git
           pip install -r requirements.txt
           sudo apt-get install docker -y
           sudo systemctl start docker
