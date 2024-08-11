@@ -10,7 +10,7 @@ aws ecr-public get-login-password --region us-east-1 | docker login --username A
 
 docker pull public.ecr.aws/r3o8w1g0/test-flask:latest
 
-docker run -p 8000:5000 public.ecr.aws/r3o8w1g0/test-flask:latest
+docker run -p 9000:5000 public.ecr.aws/r3o8w1g0/test-flask:latest
 
 
 /home/runner/work/ops_prac/ops_prac/ops_prac
