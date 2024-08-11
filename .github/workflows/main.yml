@@ -11,6 +11,18 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Add EC2 host to known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
       - name: Lauching the production ec2
         run: |
           sudo apt-get install git -y
@@ -36,11 +48,17 @@ jobs:
       #   run: |
       #     mkdir -p ~/.ssh
       #     ssh-keyscan -H ec2-13-234-21-13.ap-south-1.compute.amazonaws.com >> ~/.ssh/known_hosts
-      - name: Running the file to target ec2
+      # - name: Running the file to target ec2
+      #   run: |
+      #     ls /home/runner/work/ops_prac/ops_prac/ops_prac/key
+      #     ls /home/runner/work/ops_prac/ops_prac/ops_prac
+      #     # scp -i /home/runner/work/ops_prac/ops_prac/ops_prac/key/TEC2.pem /home/runner/work/ops_prac/ops_prac/ops_prac/yaytec2.sh ec2-13-234-21-13.ap-south-1.compute.amazonaws.com:/home/ec2-user/
+      #     # ssh -i ./key/TEC2.pem ec2-13-234-21-13.ap-south-1.compute.amazonaws.com
+      #     ssh -i /home/runner/work/ops_prac/ops_prac/ops_prac/key/TEC2.pem ec2-user@13.234.21.13
+      - name: SSH into EC2 instance
         run: |
-          ls /home/runner/work/ops_prac/ops_prac/ops_prac/key
-          ls /home/runner/work/ops_prac/ops_prac/ops_prac
-          # scp -i /home/runner/work/ops_prac/ops_prac/ops_prac/key/TEC2.pem /home/runner/work/ops_prac/ops_prac/ops_prac/yaytec2.sh ec2-13-234-21-13.ap-south-1.compute.amazonaws.com:/home/ec2-user/
-          # ssh -i ./key/TEC2.pem ec2-13-234-21-13.ap-south-1.compute.amazonaws.com
-          ssh -i /home/runner/work/ops_prac/ops_prac/ops_prac/key/TEC2.pem ec2-user@13.234.21.13
-          
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+            echo "Connected to EC2 instance successfully!"
+            # Example command: List files in home directory
+            ls -la
+          EOF
