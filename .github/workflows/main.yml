@@ -32,10 +32,10 @@ jobs:
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/r3o8w1g0
           docker tag tryimage:latest public.ecr.aws/r3o8w1g0/test-flask:latest
           docker push public.ecr.aws/r3o8w1g0/test-flask:latest
-      - name: Add EC2 host key to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ec2-13-234-21-13.ap-south-1.compute.amazonaws.com >> ~/.ssh/known_hosts
+      # - name: Add EC2 host key to known_hosts
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     ssh-keyscan -H ec2-13-234-21-13.ap-south-1.compute.amazonaws.com >> ~/.ssh/known_hosts
       - name: Running the file to target ec2
         run: |
           ls /home/runner/work/ops_prac/ops_prac/ops_prac/key
