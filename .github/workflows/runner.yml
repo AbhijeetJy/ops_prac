@@ -27,7 +27,7 @@ jobs:
           aws s3 cp s3://adminbucket-nj-abhi-123/keys/TEC2.pem ./key/
           sudo chmod 400 ./key/TEC2.pem
           ls ./key
-          ls -l ./key/TEC2.pemw
+          ls -l ./key/TEC2.pem
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/r3o8w1g0
           docker tag tryimage:latest public.ecr.aws/r3o8w1g0/test-flask:latest
           docker push public.ecr.aws/r3o8w1g0/test-flask:latest
