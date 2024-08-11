@@ -41,9 +41,9 @@ jobs:
           pwd
           ls -l ./key/TEC2.pem
           ls
-          # aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/r3o8w1g0
-          # docker tag tryimage:latest public.ecr.aws/r3o8w1g0/test-flask:latest
-          # docker push public.ecr.aws/r3o8w1g0/test-flask:latest
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/r3o8w1g0
+          docker tag tryimage:latest public.ecr.aws/r3o8w1g0/test-flask:latest
+          docker push public.ecr.aws/r3o8w1g0/test-flask:latest
       # - name: Add EC2 host key to known_hosts
       #   run: |
       #     mkdir -p ~/.ssh
